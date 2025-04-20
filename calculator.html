@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Printing Price Calculator + Simple Calculator</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+    .card {
+      margin-top: 50px;
+      border-radius: 15px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    .form-label {
+      font-weight: 500;
+    }
+    .result-box {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #198754;
+    }
+    .change-box {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #0d6efd;
+    }
+    .calculator {
+      max-width: 400px;
+      margin: 50px auto;
+    }
+    .calculator input {
+      font-size: 1.5rem;
+      text-align: right;
+    }
+    .calculator button {
+      font-size: 1.2rem;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="card p-4 m-8">
+    <h3 class="text-center mb-4">🖨️ Printing Price Calculator</h3>
+
+    <form id="printForm">
+      <div class="row g-3">
+
+        <!-- B&W Single -->
+        <div class="col-md-8">
+          <label class="form-label">B&W Single Sided Pages</label>
+          <input type="number" class="form-control" id="bwSingle" min="0" placeholder="Enter pages" />
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Rate (Tk)</label>
+          <input type="number" class="form-control" id="bwSingleRate" step="0.01" value="2.5" />
+        </div>
+
+        <!-- B&W Double -->
+        <div class="col-md-8">
+          <label class="form-label">B&W Double Sided Pages</label>
+          <input type="number" class="form-control" id="bwDouble" min="0" placeholder="Enter pages" />
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Rate (Tk)</label>
+          <input type="number" class="form-control" id="bwDoubleRate" step="0.01" value="3.5" />
+        </div>
+
+        <!-- Color Pages -->
+        <div class="col-md-8">
+          <label class="form-label">Color Pages</label>
+          <input type="number" class="form-control" id="colorPages" min="0" placeholder="Enter pages" />
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Rate (Tk)</label>
+          <input type="number" class="form-control" id="colorRate" step="0.01" value="5" />
+        </div>
+
+        <!-- Paid Amount -->
+        <div class="col-md-4">
+          <label class="form-label">Paid Amount (Tk)</label>
+          <input type="number" class="form-control" id="paidAmount" placeholder="e.g. 50" />
+        </div>
+
+        <!-- Calculate Button -->
+        <div class="col-md-12 d-flex align-items-end">
+          <button type="submit" class="btn btn-primary w-100">Calculate</button>
+        </div>
+
+        <!-- Result -->
+        <div class="col-12 text-center">
+          <div class="result-box mt-3" id="result">Total Price: 0 Tk</div>
+          <div class="change-box" id="change">Change to Return: 0 Tk</div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <!-- Simple Calculator -->
+  <div class="card p-4 calculator">
+    <h4 class="text-center mb-3">🧮 Simple Calculator</h4>
+    <input type="text" class="form-control mb-3" id="calcDisplay" readonly>
+
+    <div class="row g-2">
+      <div class="col-3"><button class="btn btn-secondary w-100" onclick="appendCalc('7')">7</button></div>
+      <div class="col-3"><button class="btn btn-secondary w-100" onclick="appendCalc('8')">8</button></div>
+      <div class="col-3"><button class="btn btn-secondary w-100" onclick="appendCalc('9')">9</button></div>
+      <div class="col-3"><button class="btn btn-warning w-100" onclick="appendCalc('/')">÷</button></div>
+
+      <div class="col-3"><button class="btn btn-secondary w-100" onclick="appendCalc('4')">4</button></div>
+      <div class="col-3"><button class="btn btn-secondary w-100" onclick="appendCalc('5')">5</button></div>
+      <div class="col-3"><button class="btn btn-secondary w-100" onclick="appendCalc('6')">6</button></div>
+      <div class="col-3"><button class="btn btn-warning w-100" onclick="appendCalc('*')">×</button></div>
+
+      <div class="col-3"><button class="btn btn-secondary w-100" onclick="appendCalc('1')">1</button></div>
+      <div class="col-3"><button class="btn btn-secondary w-100" onclick="appendCalc('2')">2</button></div>
+      <div class="col-3"><button class="btn btn-secondary w-100" onclick="appendCalc('3')">3</button></div>
+      <div class="col-3"><button class="btn btn-warning w-100" onclick="appendCalc('-')">−</button></div>
+
+      <div class="col-3"><button class="btn btn-secondary w-100" onclick="appendCalc('0')">0</button></div>
+      <div class="col-3"><button class="btn btn-secondary w-100" onclick="appendCalc('.')">.</button></div>
+      <div class="col-3"><button class="btn btn-success w-100" onclick="calculateCalc()">=</button></div>
+      <div class="col-3"><button class="btn btn-warning w-100" onclick="appendCalc('+')">+</button></div>
+
+      <div class="col-6 mt-2"><button class="btn btn-danger w-100" onclick="clearCalc()">C</button></div>
+      <div class="col-6 mt-2"><button class="btn btn-dark w-100" onclick="backspaceCalc()">⌫</button></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.getElementById("printForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    calculate();
+  });
+
+  function calculate() {
+    const bwSingle = parseInt(document.getElementById("bwSingle").value) || 0;
+    const bwDouble = parseInt(document.getElementById("bwDouble").value) || 0;
+    const colorPages = parseInt(document.getElementById("colorPages").value) || 0;
+
+    const bwSingleRate = parseFloat(document.getElementById("bwSingleRate").value) || 0;
+    const bwDoubleRate = parseFloat(document.getElementById("bwDoubleRate").value) || 0;
+    const colorRate = parseFloat(document.getElementById("colorRate").value) || 0;
+
+    const paidAmount = parseFloat(document.getElementById("paidAmount").value) || 0;
+
+    const total =
+      bwSingle * bwSingleRate +
+      bwDouble * bwDoubleRate +
+      colorPages * colorRate;
+
+    const change = paidAmount - total;
+
+    document.getElementById("result").innerText = `Total Price: ${total.toFixed(2)} Tk`;
+    document.getElementById("change").innerText =
+      change >= 0
+        ? `Change to Return: ${change.toFixed(2)} Tk`
+        : `Due: ${Math.abs(change).toFixed(2)} Tk`;
+  }
+
+  // Simple Calculator Functions
+  function appendCalc(val) {
+    document.getElementById("calcDisplay").value += val;
+  }
+
+  function clearCalc() {
+    document.getElementById("calcDisplay").value = '';
+  }
+
+  function backspaceCalc() {
+    const display = document.getElementById("calcDisplay");
+    display.value = display.value.slice(0, -1);
+  }
+
+  function calculateCalc() {
+    try {
+      const result = eval(document.getElementById("calcDisplay").value);
+      document.getElementById("calcDisplay").value = result;
+    } catch {
+      document.getElementById("calcDisplay").value = 'Error';
+    }
+  }
+  // Keyboard support for calculator
+document.getElementById("calcDisplay").addEventListener("keydown", function (e) {
+  const allowedKeys = "0123456789+-*/.";
+  
+  if (allowedKeys.includes(e.key)) {
+    // allow default input
+    return;
+  } else if (e.key === "Enter") {
+    e.preventDefault();
+    calculateCalc();
+  } else if (e.key === "Backspace" || e.key === "Delete" || e.key === "ArrowLeft" || e.key === "ArrowRight") {
+    // allow navigation and deletion
+    return;
+  } else {
+    e.preventDefault(); // block all other keys
+  }
+});
+
+</script>
+
+</body>
+</html>
