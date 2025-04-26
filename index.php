@@ -1,4 +1,5 @@
 <?php
+
 // summary.php with PIN protection
 session_start();
 if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
@@ -7,6 +8,14 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 }
 
 include 'db.php';
+
+  // Function to generate WhatsApp link with a URL-encoded message
+  function generateWhatsAppLink($phone, $message) {
+  // URL encode the message to ensure all characters are properly encoded
+  $encodedMessage = urlencode($message);
+  $whatsappLink = "https://wa.me/$phone?text=$encodedMessage"; // Create WhatsApp link
+  return $whatsappLink;
+}
 
 // Total Credit
 $credit_result = mysqli_fetch_assoc(mysqli_query($conn, "SELECT SUM(amount) as total_credit FROM transactions WHERE type = 'credit'"));
@@ -18,6 +27,9 @@ $total_debit = $debit_result['total_debit'] ?? 0;
 
 // Balance
 $balance = $total_credit - $total_debit;
+
+
+   
 ?>
 
 <!DOCTYPE html>
@@ -71,6 +83,17 @@ $balance = $total_credit - $total_debit;
       <a href="add_customer.php" class="btn btn-light btn-sm">
         <i class="bi bi-house-door"></i> Add Customer
       </a>
+        <ul class="nav card-nav">
+          <li class="nav-item"><a class="nav-link active" href="index.php">Overview</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button">Actions</a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" href="add_expense.php">Add Expense</a></li>
+              <li><a class="dropdown-item" href="add_customer.php">Add Customer</a></li>
+              <li><a class="dropdown-item" href="add_transaction.php?id=1">Add Transaction</a></li>
+            </ul>
+          </li>
+        </ul>
     </div>
     <div class="card-body">
       <div class="container py-4">
@@ -85,6 +108,7 @@ $balance = $total_credit - $total_debit;
                 <th class="d-none d-sm-table-cell">Phone</th>
                 <th>Total Balance</th>
                 <th>Actions</th>
+                <th>Send Reminder</th>
               </tr>
             </thead>
             <tbody>
@@ -107,6 +131,26 @@ $balance = $total_credit - $total_debit;
                 <td>
                   <a href="add_transaction.php?id=<?= $row['id'] ?>" class="btn btn-primary btn-sm">View</a>
                 </td>
+                <?php if($balance > 0){?>
+                <td>
+                  <a href="<?php
+                  $message = "";
+                  $message .= "*বাকি পরিশোধ করুন।*\n";
+                  $message .= "কাস্টমার মোবাইল নং ".$row['phone']."\n\n";
+                  $message .= "*বর্তমান বাকি  ";
+                  $message .=  abs($balance) . "Tk*\n\n";;
+                  
+                  
+                  $message .= "Bkash(Send Money): +8801705927257\n\n";
+                  $message .= "Dhrubo's Printing Services\n";
+                  $message .= "Barishal Engineering College";
+                  
+                  echo  generateWhatsAppLink("+88".$row['phone'],$message);
+                  ?>" class="btn btn-primary btn-sm" target="_blank">Send</a>
+                </td>
+                <?php }else{?>
+                <td></td>
+                <?php }?>
               </tr>
             <?php endwhile; ?>
             </tbody>
