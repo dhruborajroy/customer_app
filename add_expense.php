@@ -94,7 +94,7 @@ $expenses_res = mysqli_query($conn, "SELECT * FROM expenses ORDER BY expense_dat
   <!-- Summary & Chart -->
   <div class="card shadow-lg dashboard-card mb-4">
     <div class="card-header card-header-custom d-flex justify-content-between align-items-center">
-      <h4 class="mb-0">📊 Monthly Profit Dashboard</h4>
+      <h4 class="mb-0">ðŸ“Š Monthly Profit Dashboard</h4>
     </div>
     <div class="card-body">
       <div class="row text-center g-3 mb-4">
@@ -102,7 +102,7 @@ $expenses_res = mysqli_query($conn, "SELECT * FROM expenses ORDER BY expense_dat
           <div class="card summary-card border-success shadow-sm">
             <div class="card-body">
               <h6 class="text-success">Total Sales</h6>
-              <h4>৳<?= number_format($total_sales, 2) ?></h4>
+              <h4>à§³<?= number_format($total_sales, 2) ?></h4>
             </div>
           </div>
         </div>
@@ -110,7 +110,7 @@ $expenses_res = mysqli_query($conn, "SELECT * FROM expenses ORDER BY expense_dat
           <div class="card summary-card border-danger shadow-sm">
             <div class="card-body">
               <h6 class="text-danger">Total Expenses</h6>
-              <h4>৳<?= number_format($total_expenses, 2) ?></h4>
+              <h4>à§³<?= number_format($total_expenses, 2) ?></h4>
             </div>
           </div>
         </div>
@@ -118,7 +118,7 @@ $expenses_res = mysqli_query($conn, "SELECT * FROM expenses ORDER BY expense_dat
           <div class="card summary-card border-primary shadow-sm">
             <div class="card-body">
               <h6 class="text-primary">Overall Profit</h6>
-              <h4>৳<?= number_format($profit_overall, 2) ?></h4>
+              <h4>à§³<?= number_format($profit_overall, 2) ?></h4>
             </div>
           </div>
         </div>
@@ -134,7 +134,7 @@ $expenses_res = mysqli_query($conn, "SELECT * FROM expenses ORDER BY expense_dat
   <!-- Add Expense Form -->
   <div class="card shadow-sm form-card mb-4" id="formCard">
     <div class="card-header">
-      <h5 class="mb-0">➕ Add New Expense</h5>
+      <h5 class="mb-0">âž• Add New Expense</h5>
     </div>
     <div class="card-body">
       <?php if ($message): ?>
@@ -148,7 +148,7 @@ $expenses_res = mysqli_query($conn, "SELECT * FROM expenses ORDER BY expense_dat
             <input type="text" name="title" class="form-control" required>
           </div>
           <div class="col-md-3">
-            <label class="form-label">Amount (৳)</label>
+            <label class="form-label">Amount (à§³)</label>
             <input type="number" name="amount" step="0.01" class="form-control" required>
           </div>
           <div class="col-md-4">
@@ -166,7 +166,7 @@ $expenses_res = mysqli_query($conn, "SELECT * FROM expenses ORDER BY expense_dat
   <!-- Expenses List -->
   <div class="card shadow-sm list-card" id="listCard">
     <div class="card-header">
-      <h5 class="mb-0">📋 Expenses List</h5>
+      <h5 class="mb-0">ðŸ“‹ Expenses List</h5>
     </div>
     <div class="card-body table-responsive">
       <table class="table table-striped">
@@ -185,7 +185,7 @@ $expenses_res = mysqli_query($conn, "SELECT * FROM expenses ORDER BY expense_dat
           <tr>
             <td><?= $i++ ?></td>
             <td><?= htmlspecialchars($exp['title']) ?></td>
-            <td>৳<?= number_format($exp['amount'],2) ?></td>
+            <td>à§³<?= number_format($exp['amount'],2) ?></td>
             <td><?= htmlspecialchars($exp['note']) ?></td>
             <td><?= date('d M Y', strtotime($exp['expense_date'])) ?></td>
             <td>
